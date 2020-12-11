@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+	<?define Version = "2.5.0"?>
+	<?define UpgradeCode = "33f0af8e-ade3-4e25-a020-77a179ff75e3"?>
+
+	<?if $(var.spice-webdavd.Configuration) = "Debug"?>
+		<?define DebugSuffix = "d"?>
+	<?else?>
+		<?define DebugSuffix = ""?>
+	<?endif?>
+
+	<Product Id="*" Name="Spice webdavd 2.5 (ARM64)"
+			 Manufacturer="The Spice Project"
+			 Version="$(var.Version)" UpgradeCode="$(var.UpgradeCode)"
+			 Language="1033">
+
+		<Package InstallerVersion="500" Compressed="yes" Comments="comments"/>
+		<Media Id="1" Cabinet="cabinet.cab" EmbedCab="yes"/>
+
+		<Property Id="ARPHELPLINK" Value="http://www.spice-space.org"/>
+		<Property Id="ARPNOMODIFY" Value="1"/>
+		<Property Id="ARPNOREPAIR" Value="1"/>
+		<Upgrade Id="$(var.UpgradeCode)">
+			<UpgradeVersion Minimum="$(var.Version)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED"/>
+			<UpgradeVersion Minimum="0.0.0" Maximum="$(var.Version)" IncludeMinimum="yes" IncludeMaximum="no" Property="OLDERVERSIONBEINGUPGRADED"/>
+		</Upgrade>
+		<Condition Message="Product already installed.">NOT NEWERVERSIONDETECTED</Condition>
+		<InstallExecuteSequence>
+			<RemoveExistingProducts After="InstallFinalize"/>
+		</InstallExecuteSequence>
+
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFiles64Folder">
+				<Directory Id="INSTALLDIR" Name="SPICE webdavd">
+					<Component Id="CWebdavd" Guid="*">
+						<File Id='spicewebdavd' Name='spice-webdavd.exe' DiskId='1' Source='$(var.spice-webdavd.TargetDir)spice-webdavd.exe' KeyPath='yes'/>
+						<ServiceInstall Id="WebdavdServiceInstall"
+										Name="spice-webdavd"
+										DisplayName="Spice webdav proxy"
+										Description="A Spice service for folder sharing"
+										Type="ownProcess"
+										Start="auto"
+										Account="[SERVICEACCOUNT]"
+										Password="[SERVICEPASSWORD]"
+										Arguments="-p 9843"
+										ErrorControl="normal"/>
+						<ServiceControl Id="StartService"
+										Name="spice-webdavd"
+										Start="install"
+										Stop="both"
+										Remove="uninstall"
+										Wait="yes"/>
+					</Component>
+					<Component Id="CMapDrive" Guid="*">
+						<File Id='mapdrive' Name='map-drive.bat' DiskId='1' Source='$(var.SolutionDir)map-drive.bat' KeyPath='yes'/>
+					</Component>
+					<Component Id="CGioDll" Guid="*">
+						<File Id='cgiodll' Name='gio-2.dll' DiskId='1' Source='$(var.spice-webdavd.TargetDir)gio-2.dll' KeyPath='yes'/>
+					</Component>
+					<Component Id="CGlibDll" Guid="*">
+						<File Id='cglibdll' Name='glib-2.dll' DiskId='1' Source='$(var.spice-webdavd.TargetDir)glib-2.dll' KeyPath='yes'/>
+					</Component>
+					<Component Id="CGmoduleDll" Guid="*">
+						<File Id='cmoduledll' Name='gmodule-2.dll' DiskId='1' Source='$(var.spice-webdavd.TargetDir)gmodule-2.dll' KeyPath='yes'/>
+					</Component>
+					<Component Id="CGobjectDll" Guid="*">
+						<File Id='cgobjectdll' Name='gobject-2.dll' DiskId='1' Source='$(var.spice-webdavd.TargetDir)gobject-2.dll' KeyPath='yes'/>
+					</Component>
+					<Component Id="CIconvDll" Guid="*">
+						<File Id='ciconvdll' Name='iconv-2.dll' DiskId='1' Source='$(var.spice-webdavd.TargetDir)iconv-2.dll' KeyPath='yes'/>
+					</Component>
+					<Component Id="CFfiDll" Guid="*">
+						<File Id='cffidll' Name='libffi.dll' DiskId='1' Source='$(var.spice-webdavd.TargetDir)libffi.dll' KeyPath='yes'/>
+					</Component>
+					<Component Id="CPcreDll" Guid="*">
+						<File Id='cpcredll' Name='pcre.dll' DiskId='1' Source='$(var.spice-webdavd.TargetDir)pcre$(var.DebugSuffix).dll' KeyPath='yes'/>
+					</Component>
+					<Component Id="CZlibDll" Guid="*">
+						<File Id='czlibdll' Name='zlib1.dll' DiskId='1' Source='$(var.spice-webdavd.TargetDir)zlib$(var.DebugSuffix)1.dll' KeyPath='yes'/>
+					</Component>
+				</Directory>
+			</Directory>
+		</Directory>
+
+		<Feature Id="Complete"  Level="1">
+			<ComponentRef Id="CWebdavd"/>
+			<ComponentRef Id="CMapDrive"/>
+			<ComponentRef Id="CGioDll"/>
+			<ComponentRef Id="CGlibDll"/>
+			<ComponentRef Id="CGmoduleDll"/>
+			<ComponentRef Id="CGobjectDll"/>
+			<ComponentRef Id="CIconvDll"/>
+			<ComponentRef Id="CFfiDll"/>
+			<ComponentRef Id="CPcreDll"/>
+			<ComponentRef Id="CZlibDll"/>
+		</Feature>
+
+	</Product>
+</Wix>
