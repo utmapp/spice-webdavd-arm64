@@ -71,6 +71,9 @@
 					<Component Id="CIconvDll" Guid="*">
 						<File Id='ciconvdll' Name='iconv-2.dll' DiskId='1' Source='$(var.spice-webdavd.TargetDir)iconv-2.dll' KeyPath='yes'/>
 					</Component>
+					<Component Id="CIntlDll" Guid="*">
+						<File Id='cintldll' Name='intl-8.dll' DiskId='1' Source='$(var.spice-webdavd.TargetDir)intl-8.dll' KeyPath='yes'/>
+					</Component>
 					<Component Id="CFfiDll" Guid="*">
 						<File Id='cffidll' Name='libffi.dll' DiskId='1' Source='$(var.spice-webdavd.TargetDir)libffi.dll' KeyPath='yes'/>
 					</Component>
@@ -92,6 +95,7 @@
 			<ComponentRef Id="CGmoduleDll"/>
 			<ComponentRef Id="CGobjectDll"/>
 			<ComponentRef Id="CIconvDll"/>
+			<ComponentRef Id="CIntlDll"/>
 			<ComponentRef Id="CFfiDll"/>
 			<ComponentRef Id="CPcreDll"/>
 			<ComponentRef Id="CZlibDll"/>
