@@ -51,7 +51,7 @@
 										Start="install"
 										Stop="both"
 										Remove="uninstall"
-										Wait="yes"/>
+										Wait="no"/>
 					</Component>
 					<Component Id="CMapDrive" Guid="*">
 						<File Id='mapdrive' Name='map-drive.bat' DiskId='1' Source='$(var.SolutionDir)map-drive.bat' KeyPath='yes'/>
